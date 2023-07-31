@@ -1,78 +1,102 @@
 // import { useEffect } from 'react';
 
-import ContactForm from '../ContactForm/ContactForm';
-import Filter from '../Filter/Filter';
-import { nanoid } from 'nanoid';
+// import ContactForm from '../ContactForm/ContactForm';
+// import Filter from '../Filter/Filter';
+// import { nanoid } from 'nanoid';
 import { DivStyled } from './AppStyled';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import {
-  addContactThunk,
-  deleteContactThunk,
-  findContacts,
-  fetchContactsThunk,
-  selectAllContacts,
-  selectIsLoadingStatus,
-  selectErrorStatus,
-  selectFilter,
+  // addContactThunk,
+  // deleteContactThunk,
+  // findContacts,
+  // fetchContactsThunk,
+  // selectAllContacts,
+  // selectIsLoadingStatus,
+  // selectErrorStatus,
+  // selectFilter,
 } from 'redux/phonebookReducer';
-import { useEffect } from 'react';
+import { Suspense, lazy,  } from 'react';
 import { LoaderSpinner } from 'components/Loader/Loader';
+import { Link, Route, Routes } from 'react-router-dom';
+
+const HomePage = lazy(() => import('../../Page/HomePage'));
+const LogInPage = lazy(() => import('../../Page/LogInPage'));
+const RegisterPage = lazy(() => import('../../Page/RegisterPage'));
 
 function App() {
-  const contacts = useSelector(selectAllContacts);
-  const isLoading = useSelector(selectIsLoadingStatus);
-  const error = useSelector(selectErrorStatus);
-  const filter = useSelector(selectFilter);
+  // const contacts = useSelector(selectAllContacts);
+  // const isLoading = useSelector(selectIsLoadingStatus);
+  // const error = useSelector(selectErrorStatus);
+  // const filter = useSelector(selectFilter);
 
-  console.log(`актуальний масив:`, contacts);
+  // console.log(`актуальний масив:`, contacts);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchContactsThunk());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchContactsThunk());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (!error) return;
-    alert(error);
-  }, [error]);
+  // useEffect(() => {
+  //   if (!error) return;
+  //   alert(error);
+  // }, [error]);
 
-  const getFindedContacts = () => {
-    if (!contacts || contacts.length === 0) return;
-    if (!filter || filter.length === 0) return contacts;
-    const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-    return filteredContacts;
-  };
+  // const getFindedContacts = () => {
+  //   if (!contacts || contacts.length === 0) return;
+  //   if (!filter || filter.length === 0) return contacts;
+  //   const normalizedFilter = filter.toLowerCase();
+  //   const filteredContacts = contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(normalizedFilter)
+  //   );
+  //   return filteredContacts;
+  // };
 
-  const handleSubmit = ({ name, phone }) => {
-    const contact = {
-      name,
-      phone,
-      id: nanoid(),
-    };
-    console.log('Новий контакт : ', contact);
-    const findName = contacts.some(
-      el => el.name.toLowerCase() === contact.name.toLowerCase()
-    );
-    console.log('чи є такий контакт ? ', findName);
-    findName
-      ? alert(`Contact ${contact.name} is already in the contacts list`)
-      : dispatch(addContactThunk(contact));
-    console.log('array of object', contacts);
-  };
+  // const handleSubmit = ({ name, phone }) => {
+  //   const contact = {
+  //     name,
+  //     phone,
+  //     id: nanoid(),
+  //   };
+  //   console.log('Новий контакт : ', contact);
+  //   const findName = contacts.some(
+  //     el => el.name.toLowerCase() === contact.name.toLowerCase()
+  //   );
+  //   console.log('чи є такий контакт ? ', findName);
+  //   findName
+  //     ? alert(`Contact ${contact.name} is already in the contacts list`)
+  //     : dispatch(addContactThunk(contact));
+  //   console.log('array of object', contacts);
+  // };
 
-  const changeFilter = event => dispatch(findContacts(event.target.value));
+  // const changeFilter = event => dispatch(findContacts(event.target.value));
 
-  const removeContact = contactId => {
-    dispatch(deleteContactThunk(contactId));
-  };
+  // const removeContact = contactId => {
+  //   dispatch(deleteContactThunk(contactId));
+  // };
 
   return (
     <DivStyled>
-      <h1>Phonebook</h1>
+      <header>
+          <nav>
+            <Link to="/phonebook">home</Link>
+            <Link to="/login">log in</Link>
+            <Link to="/registration">sign in</Link>
+          </nav>
+      </header>
+      <main>
+        <Suspense fallback={<LoaderSpinner />}>
+          <Routes>
+            <Route path="/phonebook" element={<HomePage />}>
+                <Route path="login" element={<LogInPage />} />
+                <Route path="registration" element={<RegisterPage />} />
+            </Route>
+            <Route path="/login" element={<LogInPage />} />
+            <Route path="/registration" element={<RegisterPage />} />
+          </Routes>
+        </Suspense>
+      </main>
+      {/* <h1>Phonebook</h1>
       <ContactForm onSubmit={handleSubmit}></ContactForm>
       <Filter
         value={filter}
@@ -93,7 +117,7 @@ function App() {
             :' {error}
           </p>
         </div>
-      )}
+      )} */}
     </DivStyled>
   );
 }
