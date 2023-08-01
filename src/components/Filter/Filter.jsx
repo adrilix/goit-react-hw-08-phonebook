@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Contact from 'components/Contact/Contact';
 
 const Filter = ({ value, contacts, onChange, onDeleteContact }) => {
@@ -8,12 +8,12 @@ const Filter = ({ value, contacts, onChange, onDeleteContact }) => {
             <div>
                 <h2>Contacts</h2>
                 <label>
-                    знайди контакт за ім'ям тут  
+                    <span>знайди контакт за ім'ям тут</span>  
                     <input onChange={onChange} type="text" name="name" value={value}/>
                 </label>
             </div>
 
-            {contacts!== undefined && 
+            {contacts!== undefined && Array.isArray(contacts) && contacts.length === 0 &&
                     <ul>
                     {contacts.map(contact => (
                         <li key={contact.id}>
@@ -28,17 +28,17 @@ const Filter = ({ value, contacts, onChange, onDeleteContact }) => {
     );
 };
 
-Filter.propTypes = {
-    onDeleteContact: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    contacts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            phone: PropTypes.string.isRequired,
-        }).isRequired
-    ),
-    value: PropTypes.string,
-};
+// Filter.propTypes = {
+//     onDeleteContact: PropTypes.func.isRequired,
+//     onChange: PropTypes.func.isRequired,
+//     contacts: PropTypes.arrayOf(
+//         PropTypes.shape({
+//             id: PropTypes.string.isRequired,
+//             name: PropTypes.string.isRequired,
+//             phone: PropTypes.string.isRequired,
+//         }).isRequired
+//     ),
+//     value: PropTypes.string,
+// };
 
 export default Filter;

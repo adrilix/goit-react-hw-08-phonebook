@@ -1,81 +1,65 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
+import React from 'react';
+
 import {
     FormStyled,
     LabelStyled,
     ButtonAddContactStyled,
     InputStyled,
 } from './ContactFormStyled';
+import { useDispatch } from 'react-redux';
+import { addContactThunk } from 'redux/contactsThunks';
 
-function ContactForm ({onSubmit}) {
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
+function ContactForm(contacts) {
+    const dispatch = useDispatch();
+    const contactsUnpack = contacts.contacts;
 
-    const newContact = {name, phone};
-
-    const resetInput = () => {
-        setName('');
-        setPhone('');
-    };
-
-    const handleChangeName = evt => {
-        setName(evt.currentTarget.value);
-    };
-
-    const handleChangePhone = evt => {
-        setPhone(evt.currentTarget.value);
-    };
-
-    const handleSubmit = evt => {
-        evt.preventDefault();
-        onSubmit(newContact);
-        resetInput();
-    };
-
-    const nameInputId = nanoid();
-    const phoneInputId = nanoid();
-
-
-        return (
-            <FormStyled onSubmit={handleSubmit}>
-                <LabelStyled>
-                    Name
-                    <InputStyled
-                        onChange={handleChangeName}
-                        autoComplete='clear on escape'
-                        type="text"
-                        name="name"
-                        id={nameInputId}
-                        pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Ba"
-                        value={name}
-                        required
-                    />
-                </LabelStyled>
-
-                <LabelStyled>
-                    Number
-                    <InputStyled
-                        onChange={handleChangePhone}
-                        type="tel"
-                        name="number"
-                        id={phoneInputId}
-                        pattern="\+?\d{1,4}?[\-.\s]?\(?\d{1,3}?\)?[\-.\s]?\d{1,4}[\-.\s]?\d{1,4}[\-.\s]?\d{1,9}"
-                        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                        value={phone}
-                        required
-                    />
-                </LabelStyled>
-
-                <ButtonAddContactStyled type="submit">
-                    Add contact
-                </ButtonAddContactStyled>
-            </FormStyled>
+    const haldleSubmit = event => {
+        event.preventDefault();
+        const formData = {
+            name: event.currentTarget.elements.name.value,
+            number: event.currentTarget.elements.number.value,
+        };
+        const findName = contactsUnpack.some(
+            el => el.name.toLowerCase() === formData.name.toLowerCase()
         );
-    }
+        findName
+            ? alert(`Контакт ${formData.name} вже існує в телефонній книзі`)
+            : dispatch(addContactThunk(formData));
+        event.currentTarget.reset();
+    };
+    return (
+        <FormStyled onSubmit={haldleSubmit}>
+            <h2>Додай контакт</h2>
+            <LabelStyled>
+                <br />
+                <b>Name</b>
+                <InputStyled
+                    autoComplete="clear on escape"
+                    type="text"
+                    name="name"
+                    pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                    title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Ba"
+                    required
+                />
+            </LabelStyled>
 
-ContactForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-};
+            <LabelStyled>
+                <br />
+                <b>Number</b>
+                <InputStyled
+                    type="tel"
+                    name="number"
+                    pattern="\+?\d{1,4}?[\-.\s]?\(?\d{1,3}?\)?[\-.\s]?\d{1,4}[\-.\s]?\d{1,4}[\-.\s]?\d{1,9}"
+                    title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+                    required
+                />
+            </LabelStyled>
+
+            <ButtonAddContactStyled type="submit">
+                додай контакт
+            </ButtonAddContactStyled>
+        </FormStyled>
+    );
+}
+
 export default ContactForm;

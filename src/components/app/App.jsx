@@ -17,7 +17,7 @@ function App() {
   const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
   
-  console.log(`user data після перезавантаження: `, userData);
+  console.log(`user data після перезавантаження APP.jsx: `, userData);
   console.log(`token після синхроніхації STATE та LOCAL STORAGE :`, token);
 
   useEffect(() => {
