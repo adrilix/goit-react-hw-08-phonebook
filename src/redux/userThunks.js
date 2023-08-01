@@ -1,6 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit"
-import { getContacts, postContact, removeContact } from "services/api/api"
-import { registerRequest } from "services/api/userApi";
+import { getUserCurrentDataRequest, logInRequest, logOutRequest, registerRequest, setToken } from "services/api/userApi";
 
 export const registerThunk = createAsyncThunk ("user/registerThunk",
 async (formData, {rejectWithValue}) => {
@@ -12,22 +11,38 @@ async (formData, {rejectWithValue}) => {
     return rejectWithValue(error.message);
   }
 });
-export const addContactThunk = createAsyncThunk ("contacts/addContact",
-async (contact, {rejectWithValue}) => {
+export const logInThunk = createAsyncThunk ("user/logInThunk",
+async (formData, {rejectWithValue}) => {
   try {
-    const data = await postContact(contact);
+    const data = await logInRequest(formData);
     return data;
   } catch ( error ) {
     return rejectWithValue(error.message);
   }
 });
-export const deleteContactThunk = createAsyncThunk ("contacts/deleteContact",
-async (contactId, {rejectWithValue}) => {
+
+export const logOutThunk = createAsyncThunk ("user/logOutThunk",
+async (_, {rejectWithValue}) => {
   try {
-    const data = await removeContact(contactId);
+    const data = await logOutRequest();
     return data;
   } catch ( error ) {
     return rejectWithValue(error.message);
+  }
+});
+
+export const refreshUserThunk = createAsyncThunk ("user/refreshUserThunk",
+async (_, thunkAPI) => {
+  const state =  thunkAPI.getState();
+  const token = state.user.token;
+  console.log(state);
+  try {
+      setToken(token)
+    const data = await getUserCurrentDataRequest();
+    console.log('user data :', data);
+    return data;
+  } catch ( error ) {
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 

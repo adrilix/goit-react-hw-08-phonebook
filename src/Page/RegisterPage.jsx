@@ -1,15 +1,19 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { registerThunk } from 'redux/phonebookReducer';
-
-
-
-
-
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { registerThunk } from 'redux/userThunks';
 
 export default function RegisterPage() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const userData = useSelector(state => state.user.userData);
+
+    useEffect(()=>{
+        if(!userData) return;
+        navigate ('/contacts', {replace: true}); 
+    },[userData, navigate])
+
     const haldleSubmit = event =>{
         event.preventDefault();
         const formData = {
@@ -19,6 +23,7 @@ export default function RegisterPage() {
         };
         console.log(formData);
         dispatch(registerThunk(formData));
+        event.currentTarget.reset();
 
     }
 
@@ -28,7 +33,8 @@ export default function RegisterPage() {
             <h1>Зареєструйся, будь ласка</h1>
             <form onSubmit = {haldleSubmit}>
                 <label>
-                    name :
+                    <b>name :</b>
+                    <br />
                     <input 
                     placeholder='Taras Shevchenko'
                     type='text'
@@ -40,32 +46,37 @@ export default function RegisterPage() {
                 </label>
 
                 <label>
-                    email :
-                    <input placeholder='shevchenko@mail.com' type='email' name="email">
-                        {/* onChange={handleChangeName} */}
-                        {/* autoComplete='clear on escape'
-                            type="email"
-                            name="name" */}
-                        {/* id={nameInputId} */}
-                        {/* value={name} */}
-                        {/* required */}
-                    </input>
-                </label>
+                    <br />
+                  <b>email :</b>
+                  <br />
+                  <input placeholder='shevchenko@mail.com' 
+                  type='email' 
+                  name="email"
+                  autoComplete='clear on escape'
+                  required
+                  >
 
-                <label>
-                    password:
-                    <input placeholder='examplepwd123' type='password' minLength={7}name="password">
-                        {/* onChange={handleChangeName} */}
-                        {/* autoComplete='clear on escape'
-                            type="email"
-                            name="name" */}
-                        {/* id={nameInputId} */}
-                        {/* value={name} */}
-                        {/* required */}
-                    </input>
-                </label>
+                  </input>
+              </label>
 
+              <label>
+                <br />
+                  <b>password:</b>
+                  <br />
+                  <input 
+                  placeholder='examplepwd123' 
+                  type='password' 
+                  name="password"
+                  autoComplete='clear on escape'
+                  required
+                  >
+
+                  </input>
+              </label>
+                <br />
                 <button type='submit'>registration</button>
+                <br />
+                <Link to='/login'>Тисни сюди, якщо вже зареєстрована (ий)</Link>
 
             </form>
         </div>

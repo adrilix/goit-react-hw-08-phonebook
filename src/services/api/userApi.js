@@ -1,11 +1,11 @@
 import { $instance } from "./apiBaseUrl";
 
-const setToken = (token) => {
+export const setToken = (token) => {
     $instance.defaults.headers.Authorization = `Bearer ${token}`;
 }
 
 const clearToken = (token) => {
-    $instance.defaults.headers.Authorization = ``;
+    $instance.defaults.headers.Authorization = '';
 }
 
 export const registerRequest = async (formData) => {
@@ -22,10 +22,11 @@ export const logInRequest = async (formData) => {
 
 export const logOutRequest = async () => {
     const {data} = await $instance.post('/users/logout');
+    clearToken();
     return data;
 };
 
-export const getUserCurrentToken = async () => {
+export const getUserCurrentDataRequest = async () => {
         const {data} = await $instance.get('/users/current');
         return data;
 };

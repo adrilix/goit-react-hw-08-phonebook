@@ -1,123 +1,75 @@
-// import { useEffect } from 'react';
-
-// import ContactForm from '../ContactForm/ContactForm';
-// import Filter from '../Filter/Filter';
-// import { nanoid } from 'nanoid';
 import { DivStyled } from './AppStyled';
-// import { useDispatch, useSelector } from 'react-redux';
-import {
-  // addContactThunk,
-  // deleteContactThunk,
-  // findContacts,
-  // fetchContactsThunk,
-  // selectAllContacts,
-  // selectIsLoadingStatus,
-  // selectErrorStatus,
-  // selectFilter,
-} from 'redux/phonebookReducer';
-import { Suspense, lazy,  } from 'react';
+
+import { Suspense, lazy, useEffect } from 'react';
 import { LoaderSpinner } from 'components/Loader/Loader';
 import { Link, Route, Routes } from 'react-router-dom';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { logOutThunk, refreshUserThunk } from 'redux/userThunks';
 
 const HomePage = lazy(() => import('../../Page/HomePage'));
 const LogInPage = lazy(() => import('../../Page/LogInPage'));
 const RegisterPage = lazy(() => import('../../Page/RegisterPage'));
+const ContactsPage = lazy(() => import('../../Page/ContactsPage'));
 
 function App() {
-  // const contacts = useSelector(selectAllContacts);
-  // const isLoading = useSelector(selectIsLoadingStatus);
-  // const error = useSelector(selectErrorStatus);
-  // const filter = useSelector(selectFilter);
+  const userData = useSelector(state => state.user.userData);
+  const token = useSelector(state => state.user.token);
+  const dispatch = useDispatch();
+  
+  console.log(`user data після перезавантаження: `, userData);
+  console.log(`token після синхроніхації STATE та LOCAL STORAGE :`, token);
 
-  // console.log(`актуальний масив:`, contacts);
+  useEffect(() => {
+    if(!token) return;
+    dispatch(refreshUserThunk());
+  }, [dispatch, token]);
 
-  // const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(fetchContactsThunk());
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (!error) return;
-  //   alert(error);
-  // }, [error]);
-
-  // const getFindedContacts = () => {
-  //   if (!contacts || contacts.length === 0) return;
-  //   if (!filter || filter.length === 0) return contacts;
-  //   const normalizedFilter = filter.toLowerCase();
-  //   const filteredContacts = contacts.filter(contact =>
-  //     contact.name.toLowerCase().includes(normalizedFilter)
-  //   );
-  //   return filteredContacts;
-  // };
-
-  // const handleSubmit = ({ name, phone }) => {
-  //   const contact = {
-  //     name,
-  //     phone,
-  //     id: nanoid(),
-  //   };
-  //   console.log('Новий контакт : ', contact);
-  //   const findName = contacts.some(
-  //     el => el.name.toLowerCase() === contact.name.toLowerCase()
-  //   );
-  //   console.log('чи є такий контакт ? ', findName);
-  //   findName
-  //     ? alert(`Contact ${contact.name} is already in the contacts list`)
-  //     : dispatch(addContactThunk(contact));
-  //   console.log('array of object', contacts);
-  // };
-
-  // const changeFilter = event => dispatch(findContacts(event.target.value));
-
-  // const removeContact = contactId => {
-  //   dispatch(deleteContactThunk(contactId));
-  // };
+  const handleLogOut = () =>{
+    dispatch(logOutThunk ());
+}
 
   return (
     <DivStyled>
       <header>
-          <nav>
-            <Link to="/phonebook">home</Link>
-            <Link to="/login">log in</Link>
-            <Link to="/registration">sign in</Link>
-          </nav>
+        <nav>
+          <Link to="/home">home</Link>
+          {userData ? (
+            <>
+              <Link to="/contacts">Contacts</Link>
+              <div>
+                <p>акаунт <b>{userData.name}</b></p>
+                <button onClick={handleLogOut} type="button">Log out</button>
+              </div>
+              
+            </>
+          ) : (
+            <>
+              <Link to="/login">log in</Link>
+              <Link to="/registration">sign in</Link>
+            </>
+          )}
+        </nav>
       </header>
       <main>
         <Suspense fallback={<LoaderSpinner />}>
           <Routes>
-            <Route path="/phonebook" element={<HomePage />}>
-                <Route path="login" element={<LogInPage />} />
-                <Route path="registration" element={<RegisterPage />} />
+            <Route path="/home" element={<HomePage />}>
+              <Route path="login" element={<LogInPage />} />
+              <Route path="registration" element={<RegisterPage />} />
+              <Route path="contacts" element={<ContactsPage />} />
             </Route>
-            <Route path="/login" element={<LogInPage />} />
-            <Route path="/registration" element={<RegisterPage />} />
+            <Route path="/contacts" element={<ContactsPage />} />
+            <Route path="/login" element={<LogInPage />}/>
+              <Route path="registration" element={<RegisterPage />}>
+            </Route>
+            <Route path="/registration" element={<RegisterPage />}>
+              <Route path="login" element={<LogInPage />} />
+            </Route>
           </Routes>
         </Suspense>
       </main>
-      {/* <h1>Phonebook</h1>
-      <ContactForm onSubmit={handleSubmit}></ContactForm>
-      <Filter
-        value={filter}
-        contacts={getFindedContacts()}
-        onChange={changeFilter}
-        onDeleteContact={removeContact}
-      ></Filter>
-      {isLoading && !error && (
-        <>
-          <LoaderSpinner></LoaderSpinner>
-          <b>робота з базою...</b>
-        </>
-      )}
-      {error && (
-        <div>
-          <p>
-            Щось відбулося не так із запитом до серверу. подробиці помилки тут
-            :' {error}
-          </p>
-        </div>
-      )} */}
     </DivStyled>
   );
 }
