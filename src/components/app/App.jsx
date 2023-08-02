@@ -1,4 +1,4 @@
-import { DivStyled } from './AppStyled';
+import { DivStyled, NavStyled } from './AppStyled';
 
 import { Suspense, lazy, useEffect } from 'react';
 import { LoaderSpinner } from 'components/Loader/Loader';
@@ -23,7 +23,9 @@ function App() {
 
   useEffect(() => {
     if (!token) return;
+
     dispatch(refreshUserThunk());
+
   }, [dispatch, token]);
 
   const handleLogOut = () => {
@@ -33,7 +35,7 @@ function App() {
   return (
     <DivStyled>
       <header>
-        <nav>
+        <NavStyled>
           <Link to="/home">home</Link>
           {userData ? (
             <>
@@ -46,7 +48,7 @@ function App() {
               <Link to="/registration">sign in</Link>
             </>
           )}
-        </nav>
+        </NavStyled>
       </header>
       <main>
         <Suspense fallback={<LoaderSpinner />}>
