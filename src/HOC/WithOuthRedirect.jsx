@@ -8,7 +8,7 @@ const WithOuthRedirect=(Component)=>{
         const userData = useSelector((state)=>state.user.userData);
         // const navigate=Navigate
         return userData ? <Component {...props}/>
-        : <Navigate to='/login' />
+        : <Navigate to='/login' replace={true}/>
     };
 
     return PrivatComponent;

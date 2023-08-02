@@ -6,6 +6,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutThunk, refreshUserThunk } from 'redux/userThunks';
+import UserMenu from 'components/UserMenu/UserMenu';
 
 const HomePage = lazy(() => import('../../Page/HomePage'));
 const LogInPage = lazy(() => import('../../Page/LogInPage'));
@@ -16,19 +17,18 @@ function App() {
   const userData = useSelector(state => state.user.userData);
   const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
-  
+
   console.log(`user data після перезавантаження APP.jsx: `, userData);
   console.log(`token після синхроніхації STATE та LOCAL STORAGE :`, token);
 
   useEffect(() => {
-    if(!token) return;
+    if (!token) return;
     dispatch(refreshUserThunk());
   }, [dispatch, token]);
 
-
-  const handleLogOut = () =>{
-    dispatch(logOutThunk ());
-}
+  const handleLogOut = () => {
+    dispatch(logOutThunk());
+  };
 
   return (
     <DivStyled>
@@ -38,11 +38,7 @@ function App() {
           {userData ? (
             <>
               <Link to="/contacts">Contacts</Link>
-              <div>
-                <p>акаунт <b>{userData.name}</b></p>
-                <button onClick={handleLogOut} type="button">Log out</button>
-              </div>
-              
+              <UserMenu userName={userData.name} handleLogOut={handleLogOut} />
             </>
           ) : (
             <>
@@ -61,9 +57,8 @@ function App() {
               <Route path="contacts" element={<ContactsPage />} />
             </Route>
             <Route path="/contacts" element={<ContactsPage />} />
-            <Route path="/login" element={<LogInPage />}/>
-              <Route path="registration" element={<RegisterPage />}>
-            </Route>
+            <Route path="/login" element={<LogInPage />} />
+            <Route path="registration" element={<RegisterPage />}></Route>
             <Route path="/registration" element={<RegisterPage />}>
               <Route path="login" element={<LogInPage />} />
             </Route>
