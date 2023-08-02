@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { logInThunk } from 'redux/userThunks';
+import { logInThunk } from 'redux/userReducers/userThunks';
 
 export default function LogInPage() {
     const dispatch = useDispatch();

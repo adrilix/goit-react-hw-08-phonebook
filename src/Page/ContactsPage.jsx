@@ -6,8 +6,8 @@ import Filter from 'components/Filter/Filter';
 import { LoaderSpinner } from 'components/Loader/Loader';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { findContacts } from 'redux/contactsSlice';
-import { deleteContactThunk, fetchContactsThunk } from 'redux/contactsThunks';
+import { findContacts } from 'redux/contactsReducers/contactsSlice';
+import { deleteContactThunk, fetchContactsThunk } from 'redux/contactsReducers/contactsThunks';
 
 const ContactsPage = () => {
   const dispatch = useDispatch();

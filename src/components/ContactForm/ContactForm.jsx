@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
     FormStyled,
@@ -7,11 +8,12 @@ import {
     InputStyled,
 } from './ContactFormStyled';
 import { useDispatch } from 'react-redux';
-import { addContactThunk } from 'redux/contactsThunks';
+import { addContactThunk } from 'redux/contactsReducers/contactsThunks';
 
 function ContactForm(contacts) {
+
     const dispatch = useDispatch();
-    const contactsUnpack = contacts.contacts;
+    const contactsUnpack = contacts.contacts;    
 
     const haldleSubmit = event => {
         event.preventDefault();
@@ -61,5 +63,16 @@ function ContactForm(contacts) {
         </FormStyled>
     );
 }
+
+ContactForm.propTypes = {
+    contacts: PropTypes.arrayOf(
+            PropTypes.shape
+            // ({
+            //     id: PropTypes.string.isRequired,
+            //     name: PropTypes.string.isRequired,
+            //     number: PropTypes.string.isRequired,
+            // })
+        ).isRequired,
+    };
 
 export default ContactForm;

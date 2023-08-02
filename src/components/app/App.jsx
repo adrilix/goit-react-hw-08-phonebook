@@ -5,7 +5,7 @@ import { LoaderSpinner } from 'components/Loader/Loader';
 import { Link, Route, Routes } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { logOutThunk, refreshUserThunk } from 'redux/userThunks';
+import { logOutThunk, refreshUserThunk } from 'redux/userReducers/userThunks';
 import UserMenu from 'components/UserMenu/UserMenu';
 
 const HomePage = lazy(() => import('../../Page/HomePage'));
