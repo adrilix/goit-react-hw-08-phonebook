@@ -6,6 +6,7 @@ import Filter from 'components/Filter/Filter';
 import { LoaderSpinner } from 'components/Loader/Loader';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { findContacts } from 'redux/contactsSlice';
 import { deleteContactThunk, fetchContactsThunk } from 'redux/contactsThunks';
 
 const ContactsPage = () => {
@@ -15,7 +16,7 @@ const ContactsPage = () => {
   const contacts = useSelector(state => state.phonebook.contacts);
   const isLoading = useSelector(state => state.phonebook.isLoading);
   const error = useSelector(state => state.phonebook.error);
-  let filter = '';
+  const filter = useSelector(state => state.phonebook.filter);
 
   useEffect(() => {
     if (!userData) return;
@@ -23,8 +24,6 @@ const ContactsPage = () => {
   }, [dispatch, userData]);
 
   const getFindedContacts = () => {
-    if (!contacts || contacts.length === 0) return;
-    if (!filter || filter.length === 0) return contacts;
     const normalizedFilter = filter.toLowerCase();
     const filteredContacts = contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
@@ -32,25 +31,17 @@ const ContactsPage = () => {
     return filteredContacts;
   };
 
-  const changeFilter = event =>{
-    console.log(event.target.value);
-    const contactsToFilter=Object.values(contacts);
-//    contactsToFilter.filter((contact) => {
-//     contact.name.toLowerCase().includes(event.target.value.toLowerCase())})
-    console.log(contactsToFilter());
-    
+  const changeFilter = event => {
+    dispatch(findContacts(event.target.value))
   };
 
-//   console.log(changeFilter);
-
-  const handleDeleteContact = (contactId)=>{
-    dispatch(deleteContactThunk(contactId))
-  }
+  const handleDeleteContact = contactId => {
+    dispatch(deleteContactThunk(contactId));
+  };
 
   const showContacts = Array.isArray(contacts) && contacts.length > 0;
   const showEmptyContactsMessage =
     Array.isArray(contacts) && contacts.length === 0 && !isLoading;
-
 
   return (
     <div>
@@ -61,19 +52,18 @@ const ContactsPage = () => {
       )}
       <ContactForm contacts={contacts}></ContactForm>
 
-
-      <Filter
-        // value={filter}
-        contacts={getFindedContacts()}
-        onChange={changeFilter}
-        onDeleteContact={handleDeleteContact}
-      ></Filter>
+      <Filter value={filter} onChange={changeFilter} />
       <ul>
         {showContacts &&
-          contacts.map( ({name, number, id}) => {
+          getFindedContacts().map(({ name, number, id }) => {
             return (
               <li key={id}>
-                <Contact onDeleteContact={handleDeleteContact} name={name} number={number} id={id}></Contact>
+                <Contact
+                  onDeleteContact={handleDeleteContact}
+                  name={name}
+                  number={number}
+                  id={id}
+                ></Contact>
               </li>
             );
           })}
@@ -84,4 +74,4 @@ const ContactsPage = () => {
   );
 };
 
-export default WithOuthRedirect (ContactsPage);
+export default WithOuthRedirect(ContactsPage);

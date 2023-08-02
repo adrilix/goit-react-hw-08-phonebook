@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 export const UserMenuStyled = styled.div`
     display: flex;
+    min-height: 35px;
     justify-content: space-between;
     align-items: center;
 `
@@ -20,7 +21,11 @@ export const ButtonLogOutStyled = styled.button`
 
   &:hover {
     background: rgb(255 107 96);
-    color: #1ab188;
+    color: black;
     cursor: pointer;
 }
+`
+
+export const AccountNameStyled = styled.p`
+padding-right: 10px;
 `

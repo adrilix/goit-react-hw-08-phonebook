@@ -5,11 +5,16 @@ const initialState = {
     contacts: [],
     isLoading: false,
     error: null,
+    filter: ''
 };
 
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState,
+    reducers: {
+        findContacts: (state, action) => {
+            state.filter = action.payload;
+        }},
 
     extraReducers: builder =>
         builder
@@ -53,6 +58,12 @@ const contactsSlice = createSlice({
                 state.isLoading = false;
                 state.error = error;
             })
-});
+})
 
+export const { findContacts } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;
+
+
+
+//--------------------------- для еволюції коду ---------------------------
+// .addMatcher(action => action.type.endsWith('/pending'), handlePending)

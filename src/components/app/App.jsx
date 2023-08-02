@@ -18,9 +18,6 @@ function App() {
   const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
 
-  console.log(`user data після перезавантаження APP.jsx: `, userData);
-  console.log(`token після синхроніхації STATE та LOCAL STORAGE :`, token);
-
   useEffect(() => {
     if (!token) return;
 
@@ -36,7 +33,7 @@ function App() {
     <DivStyled>
       <header>
         <NavStyled>
-          <Link to="/home">home</Link>
+          <Link to="/">home</Link>
           {userData ? (
             <>
               <Link to="/contacts">Contacts</Link>
@@ -53,17 +50,11 @@ function App() {
       <main>
         <Suspense fallback={<LoaderSpinner />}>
           <Routes>
-            <Route path="/home" element={<HomePage />}>
-              <Route path="login" element={<LogInPage />} />
-              <Route path="registration" element={<RegisterPage />} />
-              <Route path="contacts" element={<ContactsPage />} />
-            </Route>
+            <Route path="/" element={<HomePage />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/login" element={<LogInPage />} />
-            <Route path="registration" element={<RegisterPage />}></Route>
-            <Route path="/registration" element={<RegisterPage />}>
-              <Route path="login" element={<LogInPage />} />
-            </Route>
+            <Route path="/registration" element={<RegisterPage />}/>
+            <Route path="*" element={<HomePage />} />
           </Routes>
         </Suspense>
       </main>

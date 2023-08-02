@@ -35,11 +35,9 @@ export const refreshUserThunk = createAsyncThunk ("user/refreshUserThunk",
 async (_, thunkAPI) => {
   const state =  thunkAPI.getState();
   const token = state.user.token;
-  console.log(`STATE під час перезавантаження :`,state);
   try {
       setToken(token)
     const data = await getUserCurrentDataRequest();
-    console.log('data з бекенду по токену :', data);
     return data;
   } catch ( error ) {
     return thunkAPI.rejectWithValue(error.message);
