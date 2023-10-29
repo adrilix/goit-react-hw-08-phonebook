@@ -24,7 +24,7 @@ function ContactForm(contacts) {
       el => el.name.toLowerCase() === formData.name.toLowerCase()
     );
     findName
-      ? alert(`Контакт ${formData.name} вже існує в твоїй телефонній книзі`)
+      ? alert(`Контакт ${formData.name} вже є в твоїй телефонній книзі`)
       : dispatch(addContactThunk(formData));
     event.currentTarget.reset();
   };
